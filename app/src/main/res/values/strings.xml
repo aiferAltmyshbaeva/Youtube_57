@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Youtube_Sandbox_M6_L3</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title">Title</string>
+    <string name="subtitle">Subtitle</string>
+</resources>
