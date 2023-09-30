@@ -5,6 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 open class BaseViewModel : ViewModel() {
-    protected val _loading = MutableLiveData<Boolean>()
+    private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> get() = _loading
 }

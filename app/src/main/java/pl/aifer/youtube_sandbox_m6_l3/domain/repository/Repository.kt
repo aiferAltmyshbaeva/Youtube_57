@@ -22,28 +22,28 @@ internal class Repository(private val apiService: ApiService) {
             apiKey = BuildConfig.API_KEY,
             maxResults = 10,
         ).enqueue(
-            object : Callback<Resource<PlaylistsModel>> {
+            object : Callback<PlaylistsModel> {
                 override fun onResponse(
-                    call: Call<Resource<PlaylistsModel>>,
-                    response: Response<Resource<PlaylistsModel>>
+                    call: Call<PlaylistsModel>,
+                    response: Response<PlaylistsModel>
                 ) {
                     if (response.isSuccessful) {
-                        resourceData.value = response.body()
+                        resourceData.value = Resource.success(response.body())
 
                     } else {
                         resourceData.value = Resource.error(
                             msg = response.message().toString(),
                             data = null,
-                            code = 430
+                            code = 429
                         )
                     }
                 }
 
-                override fun onFailure(call: Call<Resource<PlaylistsModel>>, t: Throwable) {
+                override fun onFailure(call: Call<PlaylistsModel>, t: Throwable) {
                     resourceData.value = Resource.error(
                         msg = t.message.toString(),
                         data = null,
-                        code = 429
+                        code = 430
                     )
                 }
 

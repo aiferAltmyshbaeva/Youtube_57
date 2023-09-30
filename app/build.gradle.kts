@@ -19,7 +19,7 @@ android {
         buildConfigField(
             type = "String",
             name = "API_KEY",
-            value = "\"AIzaSyAq8h1D-vJ8TVypFKrxjUkPT37JWs6u4LY\""
+            value = "\"${System.getenv("YOUTUBE_API_KEY")}\""
         )
         buildConfigField(
             type = "String",
@@ -81,4 +81,10 @@ dependencies {
 
     //Glide
     implementation ("com.github.bumptech.glide:glide:4.15.1")
+
+    //Coil
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
+    //ViewBindingPropertyDelegate/reflection based
+    implementation("com.github.kirich1409:viewbindingpropertydelegate-full:1.5.9")
 }

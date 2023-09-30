@@ -1,7 +1,5 @@
 package pl.aifer.youtube_sandbox_m6_l3.core.utils
 
-import pl.aifer.youtube_sandbox_m6_l3.data.model.PlaylistsModel
-
 data class Resource<out T>(
     val status: Status,
     val data: T?,
@@ -9,7 +7,7 @@ data class Resource<out T>(
     val code: Int?,
 ) {
     companion object {
-         fun <T> success(data: T?): Resource<T>? {
+        fun <T> success(data: T?): Resource<T>? {
             return Resource(
                 status = Status.SUCCESS,
                 data = data,

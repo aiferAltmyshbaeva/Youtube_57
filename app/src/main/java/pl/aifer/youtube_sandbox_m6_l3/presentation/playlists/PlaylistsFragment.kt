@@ -1,58 +1,49 @@
 package pl.aifer.youtube_sandbox_m6_l3.presentation.playlists
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import pl.aifer.youtube_sandbox_m6_l3.core.base.BaseFragment
-import pl.aifer.youtube_sandbox_m6_l3.core.network.RetrofitClient
 import pl.aifer.youtube_sandbox_m6_l3.core.utils.Status
 import pl.aifer.youtube_sandbox_m6_l3.databinding.FragmentPlaylistsBinding
-import pl.aifer.youtube_sandbox_m6_l3.domain.repository.Repository
+import pl.aifer.youtube_sandbox_m6_l3.presentation.MainActivity
 import pl.aifer.youtube_sandbox_m6_l3.presentation.playlists.adapter.PlaylistsAdapter
 
 internal class PlaylistsFragment :
-    BaseFragment<FragmentPlaylistsBinding, PlaylistsViewModel>(FragmentPlaylistsBinding::inflate) {
+    BaseFragment<FragmentPlaylistsBinding>() {
+    private val viewModel = PlaylistsViewModel(MainActivity.repository)
+    override fun inflateViewBinding(): FragmentPlaylistsBinding =
+        FragmentPlaylistsBinding.inflate(layoutInflater)
 
-    override lateinit var viewModel: PlaylistsViewModel
-//    val viewModel = PlaylistsViewModel(Repository(RetrofitClient().createApiService()))
-
-//    val playlistsViewModel = PlaylistsViewModel(Repository(RetrofitClient().createApiService()))
+    private val adapter = PlaylistsAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val viewModel = PlaylistsViewModel(Repository(RetrofitClient().createApiService()))
-        val repository = Repository(RetrofitClient().createApiService())
-        viewModel = PlaylistsViewModel(repository)
-
-        val adapter = PlaylistsAdapter(emptyList())
         binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
 
-        viewModel.getPlaylists().observe(viewLifecycleOwner, Observer { resource ->
-            if (resource !=null) {
-                when (resource.status) {
-                    Status.SUCCESS -> {
-                        binding.progressBar.visibility = View.GONE
-                        val playlists = resource.data?.items ?: emptyList()
-                        adapter.updateData(playlists)
-                    }
-
-                    Status.ERROR -> {
-                        binding.progressBar.visibility = View.GONE
-                        val errorMessage = resource.message ?: "Unknown Error"
-                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-                    }
-
-                    Status.LOADING -> {
-                        binding.progressBar.visibility = View.VISIBLE
+        viewModel.getPlaylists().observe(viewLifecycleOwner) { resource ->
+            when (resource.status) {
+                Status.SUCCESS -> {
+                    // TODO добавить проверку
+                    binding.progressBar.visibility = View.GONE
+                    resource.data?.let {
+                        adapter.updateData(it.items)
                     }
                 }
-            }else{
-                binding.progressBar.visibility = View.GONE
-                Toast.makeText(context, "Unexpected error occured", Toast.LENGTH_SHORT).show()
+
+                Status.ERROR -> {
+                    binding.progressBar.visibility = View.GONE
+                    val errorMessage = resource.message ?: "Unknown Error"
+                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                }
+
+                Status.LOADING -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                }
             }
-        })
+        }
     }
 }

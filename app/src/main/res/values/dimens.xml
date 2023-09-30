@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="standard_margin">16dp</dimen>
+    <dimen name="card_view_width">120dp</dimen>
+    <dimen name="card_view_height">80dp</dimen>
+    <dimen name="card_view_corner_radius">4dp</dimen>
+    <dimen name="title_text_size">16sp</dimen>
+    <dimen name="subtitle_text_size">12sp</dimen>
+    <dimen name="null_margin">0dp</dimen>
+    <dimen name="half_standard_margin">8dp</dimen>
+    <dimen name="double_standard_margin">24dp</dimen>
+    <dimen name="margin_start_for_transparent">52dp</dimen>
+    <dimen name="margin_top_for_title">12dp</dimen>
 </resources>

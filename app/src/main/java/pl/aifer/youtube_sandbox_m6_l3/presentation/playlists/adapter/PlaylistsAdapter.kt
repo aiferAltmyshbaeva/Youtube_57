@@ -1,37 +1,49 @@
 package pl.aifer.youtube_sandbox_m6_l3.presentation.playlists.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import coil.load
 import pl.aifer.youtube_sandbox_m6_l3.data.model.PlaylistsModel
 import pl.aifer.youtube_sandbox_m6_l3.databinding.ItemPlaylistsBinding
 
-internal class PlaylistsAdapter(private var playlists: List<PlaylistsModel.Item>) :
+internal class PlaylistsAdapter() :
     RecyclerView.Adapter<PlaylistsAdapter.PlaylistsViewHolder>() {
 
-    class PlaylistsViewHolder(val binding: ItemPlaylistsBinding) :
-        RecyclerView.ViewHolder(binding.root)
+    private var playlists = mutableListOf<PlaylistsModel.Item>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistsViewHolder {
-        val binding =
-            ItemPlaylistsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return PlaylistsViewHolder(binding)
+        return PlaylistsViewHolder(
+            ItemPlaylistsBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: PlaylistsViewHolder, position: Int) {
-        val playlist = playlists[position]
-        holder.binding.tvTitle.text = playlist.snippet.title
-        holder.binding.tvSubtitle.text = playlist.snippet.description
-        Glide.with(holder.itemView)
-            .load(playlist.snippet.thumbnails.default.url)
-            .into(holder.binding.imgPlaylists)
+        holder.bind(playlists[position])
     }
 
     override fun getItemCount() = playlists.size
 
-    fun updateData(newPlaylists: List<PlaylistsModel.Item>){
-        playlists = newPlaylists
+    inner class PlaylistsViewHolder(private val binding: ItemPlaylistsBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
+        fun bind(playlist: PlaylistsModel.Item) {
+            binding.tvTitle.text = playlist.snippet.title
+            binding.tvSubtitle.text =
+                playlist.contentDetails.itemCount.toString() + "video series"
+            binding.imgPlaylists.load(playlist.snippet.thumbnails.default.url)
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateData(newPlaylists: List<PlaylistsModel.Item>) {
+        playlists.clear()
+        playlists.addAll(newPlaylists)
         notifyDataSetChanged()
     }
 }
