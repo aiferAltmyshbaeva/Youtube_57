@@ -19,16 +19,18 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
     ): View {
         _binding = inflateViewBinding()
         return binding.root
-
     }
 
     abstract fun inflateViewBinding(): VB?
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        checkConnection()
         initView()
         initListener()
     }
+
+    abstract fun checkConnection()
 
     open fun initListener() {}
     open fun initView() {}

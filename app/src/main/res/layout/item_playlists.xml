@@ -11,7 +11,7 @@
         android:layout_width="@dimen/card_view_width"
         android:layout_height="@dimen/card_view_height"
         android:layout_marginStart="@dimen/standard_margin"
-        app:cardCornerRadius="@dimen/card_view_corner_radius"
+        app:cardCornerRadius="@dimen/default_corner_radius"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -64,7 +64,7 @@
         android:layout_marginTop="@dimen/margin_top_for_title"
         android:layout_marginEnd="@dimen/standard_margin"
         android:text="@string/title"
-        android:textSize="@dimen/title_text_size"
+        android:textSize="@dimen/default_text_size"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/cv_img"

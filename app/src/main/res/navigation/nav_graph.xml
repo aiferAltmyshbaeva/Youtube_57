@@ -10,5 +10,10 @@
         android:name="pl.aifer.youtube_sandbox_m6_l3.presentation.playlists.PlaylistsFragment"
         android:label="fragment_playlists"
         tools:layout="@layout/fragment_playlists" />
+    <fragment
+        android:id="@+id/noConnectionFragment"
+        android:name="pl.aifer.youtube_sandbox_m6_l3.presentation.noconnection.NoConnectionFragment"
+        android:label="fragment_no_connection"
+        tools:layout="@layout/fragment_noconnection" />
 
 </navigation>

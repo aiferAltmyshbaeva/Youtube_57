@@ -19,7 +19,8 @@ android {
         buildConfigField(
             type = "String",
             name = "API_KEY",
-            value = "\"${System.getenv("YOUTUBE_API_KEY")}\""
+            value = "\"AIzaSyDj3Hs4-sWHl_cDdRN3G1FJEJ_YLim7YIU\""
+
         )
         buildConfigField(
             type = "String",

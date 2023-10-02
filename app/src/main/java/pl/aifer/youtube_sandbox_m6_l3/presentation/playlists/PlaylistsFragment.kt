@@ -1,33 +1,40 @@
 package pl.aifer.youtube_sandbox_m6_l3.presentation.playlists
 
-import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import pl.aifer.youtube_sandbox_m6_l3.R
 import pl.aifer.youtube_sandbox_m6_l3.core.base.BaseFragment
 import pl.aifer.youtube_sandbox_m6_l3.core.utils.Status
 import pl.aifer.youtube_sandbox_m6_l3.databinding.FragmentPlaylistsBinding
 import pl.aifer.youtube_sandbox_m6_l3.presentation.MainActivity
 import pl.aifer.youtube_sandbox_m6_l3.presentation.playlists.adapter.PlaylistsAdapter
+import pl.aifer.youtube_sandbox_m6_l3.utils.NetworkUtils
 
-internal class PlaylistsFragment :
-    BaseFragment<FragmentPlaylistsBinding>() {
-    private val viewModel = PlaylistsViewModel(MainActivity.repository)
-    override fun inflateViewBinding(): FragmentPlaylistsBinding =
-        FragmentPlaylistsBinding.inflate(layoutInflater)
+internal class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding>() {
 
     private val adapter = PlaylistsAdapter()
+    private val playlistsViewModel = PlaylistsViewModel(MainActivity.repository)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun inflateViewBinding() =
+        FragmentPlaylistsBinding.inflate(layoutInflater)
+
+    override fun checkConnection() {
+        NetworkUtils(requireContext()).observe(viewLifecycleOwner, Observer { isConnected ->
+            if (!isConnected) findNavController().navigate(R.id.noConnectionFragment)
+        })
+    }
+
+    override fun initView() {
+        super.initView()
 
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-
-        viewModel.getPlaylists().observe(viewLifecycleOwner) { resource ->
+        playlistsViewModel.getPlaylists().observe(viewLifecycleOwner) { resource ->
             when (resource.status) {
                 Status.SUCCESS -> {
-                    // TODO добавить проверку
                     binding.progressBar.visibility = View.GONE
                     resource.data?.let {
                         adapter.updateData(it.items)
@@ -46,4 +53,5 @@ internal class PlaylistsFragment :
             }
         }
     }
+
 }
