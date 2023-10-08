@@ -26,8 +26,7 @@ internal class PlaylistItemsAdapter :
     }
 
     override fun onBindViewHolder(
-        holder: PlaylistItemsAdapter.PlaylistItemsViewHolder,
-        position: Int
+        holder: PlaylistItemsAdapter.PlaylistItemsViewHolder, position: Int
     ) {
         holder.bind(playlists[position])
     }

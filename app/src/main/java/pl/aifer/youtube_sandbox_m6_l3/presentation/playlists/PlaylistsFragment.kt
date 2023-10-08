@@ -15,17 +15,9 @@ import pl.aifer.youtube_sandbox_m6_l3.presentation.MainActivity
 import pl.aifer.youtube_sandbox_m6_l3.utils.Constants
 import pl.aifer.youtube_sandbox_m6_l3.utils.NetworkUtils
 
-
 internal class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding, PlaylistsViewModel>() {
 
     private val adapter = PlaylistsAdapter(this::onClickItem)
-
-    private fun onClickItem(playlistItem: PlaylistsModel.Item) {
-        setFragmentResult(
-            Constants.REQUEST_KEY, bundleOf(Constants.RESULT_KEY to playlistItem)
-        )
-        findNavController().navigate(R.id.playlistItemsFragment)
-    }
 
     private val networkUtils: NetworkUtils by lazy { NetworkUtils(requireContext()) }
     override fun inflaterViewBinding(
@@ -74,6 +66,13 @@ internal class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding, Playli
                 }
             }
         }
+    }
+
+    private fun onClickItem(playlistItem: PlaylistsModel.Item) {
+        setFragmentResult(
+            Constants.REQUEST_KEY, bundleOf(Constants.RESULT_KEY to playlistItem)
+        )
+        findNavController().navigate(R.id.playlistItemsFragment)
     }
 
 }

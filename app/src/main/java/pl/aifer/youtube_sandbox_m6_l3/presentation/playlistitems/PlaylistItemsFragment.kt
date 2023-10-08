@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import pl.aifer.youtube_sandbox_m6_l3.core.base.BaseFragment
@@ -14,7 +13,6 @@ import pl.aifer.youtube_sandbox_m6_l3.databinding.FragmentPlaylistItemsBinding
 import pl.aifer.youtube_sandbox_m6_l3.presentation.MainActivity
 import pl.aifer.youtube_sandbox_m6_l3.utils.Constants
 import pl.aifer.youtube_sandbox_m6_l3.utils.NetworkUtils
-
 
 internal class PlaylistItemsFragment :
     BaseFragment<FragmentPlaylistItemsBinding, PlaylistItemsViewModel>() {

@@ -63,12 +63,12 @@
         android:layout_marginStart="@dimen/half_standard_margin"
         android:layout_marginTop="@dimen/margin_top_for_title"
         android:layout_marginEnd="@dimen/standard_margin"
-        android:text="@string/title"
         android:textSize="@dimen/default_text_size"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/cv_img"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/title" />
 
     <TextView
         android:id="@+id/tv_subtitle"
@@ -77,10 +77,10 @@
         android:layout_marginStart="@dimen/half_standard_margin"
         android:layout_marginTop="@dimen/half_standard_margin"
         android:layout_marginEnd="@dimen/standard_margin"
-        android:text="@string/subtitle"
         android:textSize="@dimen/subtitle_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/cv_img"
-        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        tools:text="@string/subtitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

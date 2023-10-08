@@ -17,7 +17,7 @@ internal class RemoteDataSource(private val apiService: ApiService) : BaseDataSo
         }
     }
 
-    suspend fun getPlaylistItems(playlistId: String): Result<PlaylistsModel>{
+    suspend fun getPlaylistItems(playlistId: String): Result<PlaylistsModel> {
         return getResult {
             apiService.getPlaylistItems(
                 part = Constants.PART,

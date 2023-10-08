@@ -16,7 +16,7 @@
         <ImageView
             android:layout_width="@dimen/ic_arrow_back_width"
             android:layout_height="@dimen/ic_arrow_back_height"
-            android:layout_marginStart="@dimen/standard_margin"
+            android:layout_marginStart="@dimen/half_standard_margin"
             android:src="@drawable/ic_arrow_back" />
 
         <TextView

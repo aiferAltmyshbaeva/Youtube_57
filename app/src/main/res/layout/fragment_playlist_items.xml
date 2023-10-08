@@ -37,9 +37,10 @@
                 <LinearLayout
                     android:id="@+id/container_playlist_desc"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:backgroundTint="@color/gray"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:background="@color/gray"
+                    android:orientation="vertical"
+                    app:layout_scrollFlags="scroll|enterAlways|snap">
 
                     <TextView
                         android:id="@+id/tv_playlist_title"
@@ -47,8 +48,10 @@
                         android:layout_height="wrap_content"
                         android:lineSpacingExtra="@dimen/half_standard_margin"
                         android:padding="@dimen/standard_margin"
-                        android:text="@string/title"
-                        android:textSize="@dimen/playlist_title_text_size" />
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/playlist_title_text_size"
+                        android:textStyle="bold"
+                        tools:text="@string/title" />
 
                     <TextView
                         android:id="@+id/tv_playlist_desc"
@@ -56,8 +59,9 @@
                         android:layout_height="wrap_content"
                         android:lineSpacingExtra="@dimen/half_standard_margin"
                         android:padding="@dimen/standard_margin"
-                        android:text="@string/description"
-                        android:textSize="@dimen/playlist_desc_text_size" />
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/playlist_desc_text_size"
+                        tools:text="@string/description" />
 
                 </LinearLayout>
 

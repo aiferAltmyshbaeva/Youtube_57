@@ -43,11 +43,9 @@ internal class PlaylistsAdapter(private val onClickItem: (playlistItem: Playlist
         }
     }
 
-    //    @SuppressLint("NotifyDataSetChanged")
     fun updateData(newPlaylists: List<PlaylistsModel.Item>) {
         _playlists.clear()
         _playlists.addAll(newPlaylists)
         notifyItemRangeInserted(_playlists.size, newPlaylists.size - _playlists.size)
-//        notifyDataSetChanged()
     }
 }

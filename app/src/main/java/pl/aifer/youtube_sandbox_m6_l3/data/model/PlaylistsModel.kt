@@ -1,5 +1,7 @@
 package pl.aifer.youtube_sandbox_m6_l3.data.model
 
+import java.io.Serializable
+
 internal data class PlaylistsModel(
     val etag: String,
     val items: List<Item>,
@@ -13,7 +15,7 @@ internal data class PlaylistsModel(
         val id: String,
         val kind: String,
         val snippet: Snippet
-    ) {
+    ) : Serializable {
         internal data class ContentDetails(
             val itemCount: Int
         )
