@@ -88,4 +88,5 @@ dependencies {
 
     //ViewBindingPropertyDelegate/reflection based
     implementation("com.github.kirich1409:viewbindingpropertydelegate-full:1.5.9")
+
 }

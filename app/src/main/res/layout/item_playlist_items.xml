@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/standard_margin"
+    android:layout_marginTop="@dimen/standard_margin">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_img"
+        android:layout_width="@dimen/card_view_width"
+        android:layout_height="@dimen/card_view_height"
+        android:layout_marginStart="@dimen/standard_margin"
+        app:cardCornerRadius="@dimen/default_corner_radius"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/img_playlists"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/tv_video_title"
+        android:layout_width="@dimen/null_margin"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/half_standard_margin"
+        android:layout_marginTop="@dimen/margin_top_for_title"
+        android:layout_marginEnd="@dimen/standard_margin"
+        android:text="@string/title"
+        android:textAllCaps="true"
+        android:textSize="@dimen/default_text_size"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/cv_img"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_video_duration"
+        android:layout_width="@dimen/null_margin"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/half_standard_margin"
+        android:layout_marginTop="@dimen/half_standard_margin"
+        android:layout_marginEnd="@dimen/standard_margin"
+        android:text="@string/subtitle"
+        android:textSize="@dimen/subtitle_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/cv_img"
+        app:layout_constraintTop_toBottomOf="@id/tv_video_title" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

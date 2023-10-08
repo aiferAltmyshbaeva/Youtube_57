@@ -1,25 +1,24 @@
 package pl.aifer.youtube_sandbox_m6_l3.core.base
 
-import pl.aifer.youtube_sandbox_m6_l3.core.utils.Resource
 import retrofit2.Response
 
 abstract class BaseDataSource {
-    protected suspend fun <T> getResult(call: suspend () -> Response<T>): Resource<T> {
-        try {
+    protected suspend fun <T> getResult(call: suspend () -> Response<T>): Result<T> {
+        return try {
             val response = call()
             if (response.isSuccessful) {
                 val body = response.body()
 
                 if (body != null || response.code() in 200..299) {
-                    return Resource.success(body)!!
+                    Result.success(body!!)
+                } else {
+                    Result.failure(Throwable(response.message()))
                 }
-
             } else {
-                return Resource.error(response.message(), response.body(), response.code())
+                Result.failure(Throwable(response.message()))
             }
         } catch (e: Exception) {
-            return Resource.error(e.message ?: e.toString(), null, 429)
+            Result.failure(Throwable(e.message))
         }
-        return Resource.error("Fatal error", null, 429)
     }
 }

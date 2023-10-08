@@ -1,8 +1,12 @@
 <resources>
-    <string name="app_name">Youtube_Sandbox_M6_L3</string>
+    <string name="app_name">Youtube_57</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title">Title</string>
     <string name="subtitle">Subtitle</string>
     <string name="try_again">Try again</string>
+    <string name="description">Description</string>
+    <string name="video_series">video series</string>
+    <string name="playlist">Playlist</string>
+    <string name="back">Back</string>
 </resources>

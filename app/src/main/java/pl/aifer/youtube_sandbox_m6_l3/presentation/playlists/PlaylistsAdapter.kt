@@ -1,4 +1,4 @@
-package pl.aifer.youtube_sandbox_m6_l3.presentation.playlists.adapter
+package pl.aifer.youtube_sandbox_m6_l3.presentation.playlists
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -8,11 +8,11 @@ import coil.load
 import pl.aifer.youtube_sandbox_m6_l3.data.model.PlaylistsModel
 import pl.aifer.youtube_sandbox_m6_l3.databinding.ItemPlaylistsBinding
 
-internal class PlaylistsAdapter() :
+internal class PlaylistsAdapter(private val onClickItem: (playlistItem: PlaylistsModel.Item) -> Unit) :
     RecyclerView.Adapter<PlaylistsAdapter.PlaylistsViewHolder>() {
 
     private var _playlists = mutableListOf<PlaylistsModel.Item>()
-    private val playlists get() = _playlists
+    private val playlists: List<PlaylistsModel.Item> get() = _playlists
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistsViewHolder {
         return PlaylistsViewHolder(
@@ -39,14 +39,15 @@ internal class PlaylistsAdapter() :
             binding.tvSubtitle.text =
                 playlist.contentDetails.itemCount.toString() + " video series"
             binding.imgPlaylists.load(playlist.snippet.thumbnails.default.url)
+            itemView.setOnClickListener { onClickItem(playlist) }
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+    //    @SuppressLint("NotifyDataSetChanged")
     fun updateData(newPlaylists: List<PlaylistsModel.Item>) {
         _playlists.clear()
         _playlists.addAll(newPlaylists)
-//        notifyItemRangeInserted(_playlists.size, newPlaylists.size - _playlists.size)
-        notifyDataSetChanged()
+        notifyItemRangeInserted(_playlists.size, newPlaylists.size - _playlists.size)
+//        notifyDataSetChanged()
     }
 }

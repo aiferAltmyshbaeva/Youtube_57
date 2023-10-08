@@ -1,46 +1,42 @@
-package pl.aifer.youtube_sandbox_m6_l3.presentation.playlists
+package pl.aifer.youtube_sandbox_m6_l3.presentation.playlistitems
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.os.bundleOf
-import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.FragmentResultListener
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
-import pl.aifer.youtube_sandbox_m6_l3.R
 import pl.aifer.youtube_sandbox_m6_l3.core.base.BaseFragment
 import pl.aifer.youtube_sandbox_m6_l3.data.model.PlaylistsModel
-import pl.aifer.youtube_sandbox_m6_l3.databinding.FragmentPlaylistsBinding
+import pl.aifer.youtube_sandbox_m6_l3.databinding.FragmentPlaylistItemsBinding
 import pl.aifer.youtube_sandbox_m6_l3.presentation.MainActivity
 import pl.aifer.youtube_sandbox_m6_l3.utils.Constants
 import pl.aifer.youtube_sandbox_m6_l3.utils.NetworkUtils
 
 
-internal class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding, PlaylistsViewModel>() {
+internal class PlaylistItemsFragment :
+    BaseFragment<FragmentPlaylistItemsBinding, PlaylistItemsViewModel>() {
 
-    private val adapter = PlaylistsAdapter(this::onClickItem)
-
-    private fun onClickItem(playlistItem: PlaylistsModel.Item) {
-        setFragmentResult(
-            Constants.REQUEST_KEY, bundleOf(Constants.RESULT_KEY to playlistItem)
-        )
-        findNavController().navigate(R.id.playlistItemsFragment)
-    }
+    private val adapter = PlaylistItemsAdapter()
 
     private val networkUtils: NetworkUtils by lazy { NetworkUtils(requireContext()) }
     override fun inflaterViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ) = FragmentPlaylistsBinding.inflate(inflater, container, false)
+    ) = FragmentPlaylistItemsBinding.inflate(inflater, container, false)
 
-    override fun setViewModel() = PlaylistsViewModel(MainActivity.repository)
+    override fun setViewModel() = PlaylistItemsViewModel(MainActivity.repository)
+
+    private fun initViewModel(playlistId: String) {
+        viewModel.getPlaylistItems(playlistId)
+    }
 
     override fun initView() {
         super.initView()
 
-        viewModel.getPlaylists()
-
-        viewModel.playlists.observe(viewLifecycleOwner) { list ->
+        viewModel.playlistItems.observe(viewLifecycleOwner) { list ->
             initRecyclerView(list.items)
         }
 
@@ -61,6 +57,29 @@ internal class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding, Playli
         binding.recyclerView.adapter = adapter
     }
 
+    override fun initListener() {
+        super.initListener()
+        setFragmentResultListener(Constants.REQUEST_KEY) { _, bundle ->
+            bundle.getSerializable(Constants.RESULT_KEY)
+                ?.let { playlist ->
+                    val _playlist = playlist as PlaylistsModel.Item
+                    initData(_playlist)
+                    initViewModel(_playlist.id)
+                }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun initData(playlist: PlaylistsModel.Item) {
+        binding.tvPlaylistTitle.text = playlist.snippet.title
+        binding.tvPlaylistDesc.text = playlist.snippet.description
+        binding.tvAmountOfVideo.text =
+            playlist.contentDetails.itemCount.toString() + " video series"
+        binding.layoutToolbar.containerBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+    }
+
     override fun checkConnection() {
         networkUtils.observe(viewLifecycleOwner) { hasInternet ->
             if (!hasInternet) {
@@ -75,5 +94,4 @@ internal class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding, Playli
             }
         }
     }
-
 }
