@@ -7,7 +7,7 @@ import coil.load
 import pl.aifer.youtube_sandbox_m6_l3.data.model.PlaylistsModel
 import pl.aifer.youtube_sandbox_m6_l3.databinding.ItemPlaylistItemsBinding
 
-internal class PlaylistItemsAdapter :
+internal class PlaylistItemsAdapter(private val onCLickItem: (item: PlaylistsModel.Item) -> Unit) :
     RecyclerView.Adapter<PlaylistItemsAdapter.PlaylistItemsViewHolder>() {
 
     private var _playlists = mutableListOf<PlaylistsModel.Item>()
@@ -38,6 +38,7 @@ internal class PlaylistItemsAdapter :
         fun bind(playlist: PlaylistsModel.Item) {
             binding.tvVideoTitle.text = playlist.snippet.title
             binding.imgPlaylists.load(playlist.snippet.thumbnails.default.url)
+            itemView.setOnClickListener { onCLickItem(playlist) }
         }
     }
 

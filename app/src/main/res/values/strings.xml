@@ -9,4 +9,9 @@
     <string name="video_series">video series</string>
     <string name="playlist">Playlist</string>
     <string name="back">Back</string>
+    <string name="download">Download</string>
+    <string name="select_video_quality">Select video quality</string>
+    <string name="video_quality_1080p">1080p</string>
+    <string name="video_quality_720p">720p</string>
+    <string name="video_quality_480p">480p</string>
 </resources>

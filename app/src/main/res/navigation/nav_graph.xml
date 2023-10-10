@@ -15,5 +15,10 @@
         android:name="pl.aifer.youtube_sandbox_m6_l3.presentation.playlistitems.PlaylistItemsFragment"
         android:label="fragment_playlist_items"
         tools:layout="@layout/fragment_playlist_items" />
+    <fragment
+        android:id="@+id/videoFragment"
+        android:name="pl.aifer.youtube_sandbox_m6_l3.presentation.video.VideoFragment"
+        android:label="fragment_video"
+        tools:layout="@layout/fragment_video" />
 
 </navigation>

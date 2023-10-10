@@ -38,6 +38,7 @@
         android:textAllCaps="true"
         android:textSize="@dimen/default_text_size"
         android:textStyle="bold"
+        android:maxLines="2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/cv_img"
         app:layout_constraintTop_toTopOf="parent"

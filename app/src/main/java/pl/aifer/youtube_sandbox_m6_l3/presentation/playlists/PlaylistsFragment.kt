@@ -7,11 +7,11 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import pl.aifer.youtube_sandbox_m6_l3.R
 import pl.aifer.youtube_sandbox_m6_l3.core.base.BaseFragment
 import pl.aifer.youtube_sandbox_m6_l3.data.model.PlaylistsModel
 import pl.aifer.youtube_sandbox_m6_l3.databinding.FragmentPlaylistsBinding
-import pl.aifer.youtube_sandbox_m6_l3.presentation.MainActivity
 import pl.aifer.youtube_sandbox_m6_l3.utils.Constants
 import pl.aifer.youtube_sandbox_m6_l3.utils.NetworkUtils
 
@@ -20,12 +20,13 @@ internal class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding, Playli
     private val adapter = PlaylistsAdapter(this::onClickItem)
 
     private val networkUtils: NetworkUtils by lazy { NetworkUtils(requireContext()) }
+
+    override val viewModel: PlaylistsViewModel by viewModel()
+
     override fun inflaterViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
     ) = FragmentPlaylistsBinding.inflate(inflater, container, false)
-
-    override fun setViewModel() = PlaylistsViewModel(MainActivity.repository)
 
     override fun initView() {
         super.initView()

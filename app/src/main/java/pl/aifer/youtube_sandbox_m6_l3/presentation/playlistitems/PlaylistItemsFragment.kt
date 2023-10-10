@@ -5,27 +5,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import pl.aifer.youtube_sandbox_m6_l3.R
 import pl.aifer.youtube_sandbox_m6_l3.core.base.BaseFragment
 import pl.aifer.youtube_sandbox_m6_l3.data.model.PlaylistsModel
 import pl.aifer.youtube_sandbox_m6_l3.databinding.FragmentPlaylistItemsBinding
-import pl.aifer.youtube_sandbox_m6_l3.presentation.MainActivity
 import pl.aifer.youtube_sandbox_m6_l3.utils.Constants
 import pl.aifer.youtube_sandbox_m6_l3.utils.NetworkUtils
 
 internal class PlaylistItemsFragment :
     BaseFragment<FragmentPlaylistItemsBinding, PlaylistItemsViewModel>() {
 
-    private val adapter = PlaylistItemsAdapter()
+    private val adapter = PlaylistItemsAdapter(this::onClickItem)
 
     private val networkUtils: NetworkUtils by lazy { NetworkUtils(requireContext()) }
+
+    override val viewModel: PlaylistItemsViewModel by viewModel()
+
     override fun inflaterViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
     ) = FragmentPlaylistItemsBinding.inflate(inflater, container, false)
-
-    override fun setViewModel() = PlaylistItemsViewModel(MainActivity.repository)
 
     private fun initViewModel(playlistId: String) {
         viewModel.getPlaylistItems(playlistId)
@@ -57,6 +61,11 @@ internal class PlaylistItemsFragment :
 
     override fun initListener() {
         super.initListener()
+
+        binding.layoutToolbar.containerBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
         setFragmentResultListener(Constants.REQUEST_KEY) { _, bundle ->
             bundle.getSerializable(Constants.RESULT_KEY)
                 ?.let { playlist ->
@@ -73,23 +82,28 @@ internal class PlaylistItemsFragment :
         binding.tvPlaylistDesc.text = playlist.snippet.description
         binding.tvAmountOfVideo.text =
             playlist.contentDetails.itemCount.toString() + " video series"
-        binding.layoutToolbar.containerBack.setOnClickListener {
-            findNavController().navigateUp()
-        }
     }
 
     override fun checkConnection() {
         networkUtils.observe(viewLifecycleOwner) { hasInternet ->
             if (!hasInternet) {
-                binding.recyclerView.visibility = View.GONE
+                binding.containerToolbar.visibility = View.GONE
                 binding.containerNoConnection.visibility = View.VISIBLE
             }
             binding.layoutNoConnection.btnTryAgain.setOnClickListener {
                 if (hasInternet) {
-                    binding.recyclerView.visibility = View.VISIBLE
+                    binding.containerToolbar.visibility = View.VISIBLE
                     binding.containerNoConnection.visibility = View.GONE
                 }
             }
         }
+    }
+
+    private fun onClickItem(item: PlaylistsModel.Item) {
+        setFragmentResult(
+            Constants.VIDEO_REQUEST_KEY,
+            bundleOf(Constants.VIDEO_RESULT_KEY to item)
+        )
+        findNavController().navigate(R.id.videoFragment)
     }
 }

@@ -67,7 +67,6 @@
 
             </com.google.android.material.appbar.AppBarLayout>
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -112,8 +111,12 @@
                 android:layout_margin="@dimen/standard_margin"
                 android:backgroundTint="@color/red"
                 android:src="@drawable/ic_play_arrow"
+                app:borderWidth="@dimen/null_margin"
                 app:layout_anchor="@id/main.appbar"
-                app:layout_anchorGravity="bottom|right|end" />
+                app:layout_anchorGravity="bottom|right|end"
+                app:shapeAppearance="@style/Base.Button"
+                app:tint="@color/white"
+                tools:ignore="ContentDescription" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

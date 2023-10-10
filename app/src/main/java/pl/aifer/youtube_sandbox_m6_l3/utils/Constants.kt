@@ -6,4 +6,7 @@ object Constants {
 
     const val REQUEST_KEY = "request.key"
     const val RESULT_KEY = "result.key"
+
+    const val VIDEO_REQUEST_KEY =  "video_request.key"
+    const val VIDEO_RESULT_KEY =  "video_result.key"
 }
