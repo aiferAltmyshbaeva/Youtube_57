@@ -63,6 +63,7 @@
         android:layout_marginStart="@dimen/half_standard_margin"
         android:layout_marginTop="@dimen/margin_top_for_title"
         android:layout_marginEnd="@dimen/standard_margin"
+        android:fontFamily="sans-serif-condensed"
         android:textSize="@dimen/default_text_size"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

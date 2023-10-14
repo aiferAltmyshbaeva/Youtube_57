@@ -5,14 +5,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import pl.aifer.youtube_sandbox_m6_l3.R
 import pl.aifer.youtube_sandbox_m6_l3.data.model.PlaylistsModel
 import pl.aifer.youtube_sandbox_m6_l3.databinding.ItemPlaylistsBinding
+import pl.aifer.youtube_sandbox_m6_l3.utils.ResourceProvider
 
-internal class PlaylistsAdapter(private val onClickItem: (playlistItem: PlaylistsModel.Item) -> Unit) :
+internal class PlaylistsAdapter(
+    private val onClickItem: (playlistItem: PlaylistsModel.Item) -> Unit,
+    private val resourceProvider: ResourceProvider
+) :
     RecyclerView.Adapter<PlaylistsAdapter.PlaylistsViewHolder>() {
 
-    private var _playlists = mutableListOf<PlaylistsModel.Item>()
-    private val playlists: List<PlaylistsModel.Item> get() = _playlists
+    private val playlists = mutableListOf<PlaylistsModel.Item>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistsViewHolder {
         return PlaylistsViewHolder(
@@ -37,15 +41,18 @@ internal class PlaylistsAdapter(private val onClickItem: (playlistItem: Playlist
         fun bind(playlist: PlaylistsModel.Item) {
             binding.tvTitle.text = playlist.snippet.title
             binding.tvSubtitle.text =
-                playlist.contentDetails.itemCount.toString() + " video series"
+                resourceProvider.getStringWithKey(
+                    resId = R.string.video_series,
+                    keyResId = playlist.contentDetails.itemCount.toString()
+                )
             binding.imgPlaylists.load(playlist.snippet.thumbnails.default.url)
             itemView.setOnClickListener { onClickItem(playlist) }
         }
     }
 
     fun updateData(newPlaylists: List<PlaylistsModel.Item>) {
-        _playlists.clear()
-        _playlists.addAll(newPlaylists)
-        notifyItemRangeInserted(_playlists.size, newPlaylists.size - _playlists.size)
+        playlists.clear()
+        playlists.addAll(newPlaylists)
+        notifyItemRangeInserted(playlists.size, newPlaylists.size - playlists.size)
     }
 }

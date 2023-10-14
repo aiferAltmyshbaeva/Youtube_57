@@ -7,11 +7,12 @@ import coil.load
 import pl.aifer.youtube_sandbox_m6_l3.data.model.PlaylistsModel
 import pl.aifer.youtube_sandbox_m6_l3.databinding.ItemPlaylistItemsBinding
 
-internal class PlaylistItemsAdapter(private val onCLickItem: (item: PlaylistsModel.Item) -> Unit) :
+internal class PlaylistItemsAdapter(
+    private val onCLickItem: (item: PlaylistsModel.Item) -> Unit
+) :
     RecyclerView.Adapter<PlaylistItemsAdapter.PlaylistItemsViewHolder>() {
 
-    private var _playlists = mutableListOf<PlaylistsModel.Item>()
-    private val playlists: List<PlaylistsModel.Item> get() = _playlists
+    private val playlists = mutableListOf<PlaylistsModel.Item>()
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -43,8 +44,8 @@ internal class PlaylistItemsAdapter(private val onCLickItem: (item: PlaylistsMod
     }
 
     fun updateData(newPlaylists: List<PlaylistsModel.Item>) {
-        _playlists.clear()
-        _playlists.addAll(newPlaylists)
-        notifyItemRangeInserted(_playlists.size, newPlaylists.size - _playlists.size)
+        playlists.clear()
+        playlists.addAll(newPlaylists)
+        notifyItemRangeInserted(playlists.size, newPlaylists.size - playlists.size)
     }
 }

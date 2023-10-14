@@ -17,23 +17,40 @@ import pl.aifer.youtube_sandbox_m6_l3.databinding.FragmentPlaylistItemsBinding
 import pl.aifer.youtube_sandbox_m6_l3.utils.Constants
 import pl.aifer.youtube_sandbox_m6_l3.utils.NetworkUtils
 
-internal class PlaylistItemsFragment :
+internal class PlaylistItemsFragment() :
     BaseFragment<FragmentPlaylistItemsBinding, PlaylistItemsViewModel>() {
+    override val viewModel: PlaylistItemsViewModel by viewModel()
 
     private val adapter = PlaylistItemsAdapter(this::onClickItem)
+    private fun initViewModel(playlistId: String) {
+        viewModel.getPlaylistItems(playlistId)
+    }
 
-    private val networkUtils: NetworkUtils by lazy { NetworkUtils(requireContext()) }
+    private fun initRecyclerView(items: List<PlaylistsModel.Item>) {
+        adapter.updateData(items)
+        binding.recyclerView.adapter = adapter
+    }
 
-    override val viewModel: PlaylistItemsViewModel by viewModel()
+    @SuppressLint("SetTextI18n")
+    private fun initData(playlist: PlaylistsModel.Item) {
+        binding.tvPlaylistTitle.text = playlist.snippet.title
+        binding.tvPlaylistDesc.text = playlist.snippet.description
+        binding.tvAmountOfVideo.text =
+            playlist.contentDetails.itemCount.toString() + " video series"
+    }
+
+    private fun onClickItem(item: PlaylistsModel.Item) {
+        setFragmentResult(
+            Constants.VIDEO_REQUEST_KEY,
+            bundleOf(Constants.VIDEO_RESULT_KEY to item)
+        )
+        findNavController().navigate(R.id.videoFragment)
+    }
 
     override fun inflaterViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
     ) = FragmentPlaylistItemsBinding.inflate(inflater, container, false)
-
-    private fun initViewModel(playlistId: String) {
-        viewModel.getPlaylistItems(playlistId)
-    }
 
     override fun initView() {
         super.initView()
@@ -43,20 +60,13 @@ internal class PlaylistItemsFragment :
         }
 
         viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading)
-                binding.progressBar.visibility = View.VISIBLE
-            else
-                binding.progressBar.visibility = View.GONE
+            if (isLoading) binding.progressBar.visibility = View.VISIBLE
+            else binding.progressBar.visibility = View.GONE
         }
 
         viewModel.error.observe(viewLifecycleOwner) { error ->
             Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun initRecyclerView(items: List<PlaylistsModel.Item>) {
-        adapter.updateData(items)
-        binding.recyclerView.adapter = adapter
     }
 
     override fun initListener() {
@@ -74,17 +84,11 @@ internal class PlaylistItemsFragment :
                     initViewModel(_playlist.id)
                 }
         }
-    }
 
-    @SuppressLint("SetTextI18n")
-    private fun initData(playlist: PlaylistsModel.Item) {
-        binding.tvPlaylistTitle.text = playlist.snippet.title
-        binding.tvPlaylistDesc.text = playlist.snippet.description
-        binding.tvAmountOfVideo.text =
-            playlist.contentDetails.itemCount.toString() + " video series"
     }
 
     override fun checkConnection() {
+        val networkUtils = NetworkUtils(requireContext())
         networkUtils.observe(viewLifecycleOwner) { hasInternet ->
             if (!hasInternet) {
                 binding.containerToolbar.visibility = View.GONE
@@ -99,11 +103,4 @@ internal class PlaylistItemsFragment :
         }
     }
 
-    private fun onClickItem(item: PlaylistsModel.Item) {
-        setFragmentResult(
-            Constants.VIDEO_REQUEST_KEY,
-            bundleOf(Constants.VIDEO_RESULT_KEY to item)
-        )
-        findNavController().navigate(R.id.videoFragment)
-    }
 }

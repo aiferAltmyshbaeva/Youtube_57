@@ -14,14 +14,29 @@ import pl.aifer.youtube_sandbox_m6_l3.data.model.PlaylistsModel
 import pl.aifer.youtube_sandbox_m6_l3.databinding.FragmentPlaylistsBinding
 import pl.aifer.youtube_sandbox_m6_l3.utils.Constants
 import pl.aifer.youtube_sandbox_m6_l3.utils.NetworkUtils
+import pl.aifer.youtube_sandbox_m6_l3.utils.ResourceProvider
 
-internal class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding, PlaylistsViewModel>() {
-
-    private val adapter = PlaylistsAdapter(this::onClickItem)
-
-    private val networkUtils: NetworkUtils by lazy { NetworkUtils(requireContext()) }
+internal class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding, PlaylistsViewModel>(),
+    ResourceProvider {
 
     override val viewModel: PlaylistsViewModel by viewModel()
+
+    private val adapter = PlaylistsAdapter(
+        onClickItem = this::onClickItem,
+        resourceProvider = this
+    )
+
+    private fun initRecyclerView(items: List<PlaylistsModel.Item>) {
+        adapter.updateData(items)
+        binding.recyclerView.adapter = adapter
+    }
+
+    private fun onClickItem(playlistItem: PlaylistsModel.Item) {
+        setFragmentResult(
+            Constants.REQUEST_KEY, bundleOf(Constants.RESULT_KEY to playlistItem)
+        )
+        findNavController().navigate(R.id.playlistItemsFragment)
+    }
 
     override fun inflaterViewBinding(
         inflater: LayoutInflater,
@@ -38,10 +53,8 @@ internal class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding, Playli
         }
 
         viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading)
-                binding.progressBar.visibility = View.VISIBLE
-            else
-                binding.progressBar.visibility = View.GONE
+            if (isLoading) binding.progressBar.visibility = View.VISIBLE
+            else binding.progressBar.visibility = View.GONE
         }
 
         viewModel.error.observe(viewLifecycleOwner) { error ->
@@ -49,12 +62,8 @@ internal class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding, Playli
         }
     }
 
-    private fun initRecyclerView(items: List<PlaylistsModel.Item>) {
-        adapter.updateData(items)
-        binding.recyclerView.adapter = adapter
-    }
-
     override fun checkConnection() {
+        val networkUtils = NetworkUtils(requireContext())
         networkUtils.observe(viewLifecycleOwner) { hasInternet ->
             if (!hasInternet) {
                 binding.recyclerView.visibility = View.GONE
@@ -64,16 +73,18 @@ internal class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding, Playli
                 if (hasInternet) {
                     binding.recyclerView.visibility = View.VISIBLE
                     binding.containerNoConnection.visibility = View.GONE
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "You don't have Internet connection, try again",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
     }
 
-    private fun onClickItem(playlistItem: PlaylistsModel.Item) {
-        setFragmentResult(
-            Constants.REQUEST_KEY, bundleOf(Constants.RESULT_KEY to playlistItem)
-        )
-        findNavController().navigate(R.id.playlistItemsFragment)
+    override fun getStringWithKey(resId: Int, keyResId: String): String {
+        return resources.getString(resId, keyResId)
     }
-
 }

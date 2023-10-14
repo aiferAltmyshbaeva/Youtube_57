@@ -83,7 +83,8 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:paddingBottom="@dimen/half_standard_margin">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_view"
