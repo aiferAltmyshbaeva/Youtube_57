@@ -27,11 +27,15 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        initData()
+        initRecyclerView()
         initListener()
         checkConnection()
     }
 
     open fun initView() {}
+    open fun initData() {}
+    open fun initRecyclerView() {}
     open fun initListener() {}
     open fun checkConnection() {}
 

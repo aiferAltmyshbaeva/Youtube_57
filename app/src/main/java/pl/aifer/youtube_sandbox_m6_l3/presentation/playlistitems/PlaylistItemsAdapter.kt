@@ -2,17 +2,21 @@ package pl.aifer.youtube_sandbox_m6_l3.presentation.playlistitems
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import pl.aifer.youtube_sandbox_m6_l3.data.model.PlaylistsModel
 import pl.aifer.youtube_sandbox_m6_l3.databinding.ItemPlaylistItemsBinding
 
 internal class PlaylistItemsAdapter(
+    diffUtilCallback: DiffUtil.ItemCallback<PlaylistsModel.Item>,
     private val onCLickItem: (item: PlaylistsModel.Item) -> Unit
 ) :
-    RecyclerView.Adapter<PlaylistItemsAdapter.PlaylistItemsViewHolder>() {
+    PagingDataAdapter<PlaylistsModel.Item, PlaylistItemsAdapter.PlaylistItemsViewHolder>(
+        diffUtilCallback
+    ) {
 
-    private val playlists = mutableListOf<PlaylistsModel.Item>()
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -29,23 +33,20 @@ internal class PlaylistItemsAdapter(
     override fun onBindViewHolder(
         holder: PlaylistItemsAdapter.PlaylistItemsViewHolder, position: Int
     ) {
-        holder.bind(playlists[position])
+        val newPosition = getItem(position)
+        newPosition?.let {
+            holder.bind(it)
+        }
     }
-
-    override fun getItemCount() = playlists.size
 
     inner class PlaylistItemsViewHolder(private val binding: ItemPlaylistItemsBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(playlist: PlaylistsModel.Item) {
-            binding.tvVideoTitle.text = playlist.snippet.title
-            binding.imgPlaylists.load(playlist.snippet.thumbnails.default.url)
+            if (!playlist.snippet.thumbnails.default.url.isNullOrEmpty() && !playlist.snippet.title.isNullOrEmpty()) {
+                binding.tvVideoTitle.text = playlist.snippet.title
+                binding.imgPlaylists.load(playlist.snippet.thumbnails.default.url)
+            }
             itemView.setOnClickListener { onCLickItem(playlist) }
         }
-    }
-
-    fun updateData(newPlaylists: List<PlaylistsModel.Item>) {
-        playlists.clear()
-        playlists.addAll(newPlaylists)
-        notifyItemRangeInserted(playlists.size, newPlaylists.size - playlists.size)
     }
 }

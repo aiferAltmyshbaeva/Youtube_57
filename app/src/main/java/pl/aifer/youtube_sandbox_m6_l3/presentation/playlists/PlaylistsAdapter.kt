@@ -3,20 +3,18 @@ package pl.aifer.youtube_sandbox_m6_l3.presentation.playlists
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import pl.aifer.youtube_sandbox_m6_l3.R
 import pl.aifer.youtube_sandbox_m6_l3.data.model.PlaylistsModel
 import pl.aifer.youtube_sandbox_m6_l3.databinding.ItemPlaylistsBinding
-import pl.aifer.youtube_sandbox_m6_l3.utils.ResourceProvider
 
 internal class PlaylistsAdapter(
+    diffUtilCallback: DiffUtil.ItemCallback<PlaylistsModel.Item>,
     private val onClickItem: (playlistItem: PlaylistsModel.Item) -> Unit,
-    private val resourceProvider: ResourceProvider
 ) :
-    RecyclerView.Adapter<PlaylistsAdapter.PlaylistsViewHolder>() {
-
-    private val playlists = mutableListOf<PlaylistsModel.Item>()
+    PagingDataAdapter<PlaylistsModel.Item, PlaylistsAdapter.PlaylistsViewHolder>(diffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistsViewHolder {
         return PlaylistsViewHolder(
@@ -29,10 +27,11 @@ internal class PlaylistsAdapter(
     }
 
     override fun onBindViewHolder(holder: PlaylistsViewHolder, position: Int) {
-        holder.bind(playlists[position])
+        val newPosition = getItem(position)
+        newPosition?.let {
+            holder.bind(it)
+        }
     }
-
-    override fun getItemCount() = playlists.size
 
     inner class PlaylistsViewHolder(private val binding: ItemPlaylistsBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -41,18 +40,9 @@ internal class PlaylistsAdapter(
         fun bind(playlist: PlaylistsModel.Item) {
             binding.tvTitle.text = playlist.snippet.title
             binding.tvSubtitle.text =
-                resourceProvider.getStringWithKey(
-                    resId = R.string.video_series,
-                    keyResId = playlist.contentDetails.itemCount.toString()
-                )
+                playlist.contentDetails.itemCount.toString() + " video series"
             binding.imgPlaylists.load(playlist.snippet.thumbnails.default.url)
             itemView.setOnClickListener { onClickItem(playlist) }
         }
-    }
-
-    fun updateData(newPlaylists: List<PlaylistsModel.Item>) {
-        playlists.clear()
-        playlists.addAll(newPlaylists)
-        notifyItemRangeInserted(playlists.size, newPlaylists.size - playlists.size)
     }
 }

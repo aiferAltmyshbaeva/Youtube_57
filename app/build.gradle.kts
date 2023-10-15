@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -91,5 +92,9 @@ dependencies {
 
     //Youtube Player
     implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0")
+
+    //Paging3
+    implementation ("androidx.paging:paging-runtime-ktx:3.2.1")
+
 
 }

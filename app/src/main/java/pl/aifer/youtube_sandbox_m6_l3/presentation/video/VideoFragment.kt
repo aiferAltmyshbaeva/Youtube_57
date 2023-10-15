@@ -18,33 +18,9 @@ import pl.aifer.youtube_sandbox_m6_l3.databinding.FragmentVideoBinding
 import pl.aifer.youtube_sandbox_m6_l3.utils.Constants
 import pl.aifer.youtube_sandbox_m6_l3.utils.NetworkUtils
 
-
 internal class VideoFragment : BaseFragment<FragmentVideoBinding, VideoViewModel>() {
 
     override val viewModel: VideoViewModel by viewModel()
-
-    private fun initViewModel(videoId: String) {
-        viewModel.getVideo(videoId)
-    }
-
-    private fun downloadVideo() {
-        val alertDialog = AlertDialog.Builder(requireContext())
-        alertDialog.setView(R.layout.layout_download).show()
-    }
-
-    private fun initData(items: List<PlaylistsModel.Item>) {
-        binding.youtubePlayerView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
-            override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
-                val videoId = items.first().id
-                youTubePlayer.loadVideo(videoId, 0f)
-            }
-        })
-        binding.tvVideoTitle.text = items.first().snippet.title
-        binding.tvVideoDesc.text = items.first().snippet.description
-        binding.layoutToolbar.containerBack.setOnClickListener {
-            findNavController().navigateUp()
-        }
-    }
 
     override fun inflaterViewBinding(
         inflater: LayoutInflater,
@@ -74,6 +50,10 @@ internal class VideoFragment : BaseFragment<FragmentVideoBinding, VideoViewModel
     override fun initListener() {
         super.initListener()
 
+        binding.layoutToolbar.containerBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
         binding.btnDownload.setOnClickListener {
             downloadVideo()
         }
@@ -92,17 +72,43 @@ internal class VideoFragment : BaseFragment<FragmentVideoBinding, VideoViewModel
         networkUtils.observe(viewLifecycleOwner) { hasInternet ->
             if (!hasInternet) {
                 binding.mainContainer.visibility = View.GONE
-                binding.toolbar.visibility = View.GONE
                 binding.containerNoConnection.visibility = View.VISIBLE
             }
             binding.layoutNoConnection.btnTryAgain.setOnClickListener {
                 if (hasInternet) {
                     binding.mainContainer.visibility = View.VISIBLE
-                    binding.toolbar.visibility = View.VISIBLE
                     binding.containerNoConnection.visibility = View.GONE
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.you_don_t_have_internet_connection_try_again,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
     }
 
+    private fun initViewModel(videoId: String) {
+        viewModel.getVideo(videoId)
+    }
+
+    private fun downloadVideo() {
+        val alertDialog = AlertDialog.Builder(requireContext())
+        alertDialog.setView(R.layout.layout_download).show()
+    }
+
+    private fun initData(items: List<PlaylistsModel.Item>) {
+        binding.youtubePlayerView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
+            override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                val videoId = items.first().id
+                youTubePlayer.loadVideo(videoId, 0f)
+            }
+        })
+        binding.tvVideoTitle.text = items.first().snippet.title
+        binding.tvVideoDesc.text = items.first().snippet.description
+//        binding.layoutToolbar.containerBack.setOnClickListener {
+//            findNavController().navigateUp()
+//        }
+    }
 }

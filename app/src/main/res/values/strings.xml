@@ -14,4 +14,5 @@
     <string name="video_quality_720p">720p</string>
     <string name="video_quality_480p">480p</string>
     <string name="video_series">" video series"</string>
+    <string name="you_don_t_have_internet_connection_try_again">You don\'t have Internet connection, try again</string>
 </resources>

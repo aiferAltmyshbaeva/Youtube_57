@@ -6,37 +6,28 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import pl.aifer.youtube_sandbox_m6_l3.R
 import pl.aifer.youtube_sandbox_m6_l3.core.base.BaseFragment
 import pl.aifer.youtube_sandbox_m6_l3.data.model.PlaylistsModel
 import pl.aifer.youtube_sandbox_m6_l3.databinding.FragmentPlaylistsBinding
+import pl.aifer.youtube_sandbox_m6_l3.presentation.playlists.paging_load_state.PlaylistsLoadStateAdapter
 import pl.aifer.youtube_sandbox_m6_l3.utils.Constants
 import pl.aifer.youtube_sandbox_m6_l3.utils.NetworkUtils
-import pl.aifer.youtube_sandbox_m6_l3.utils.ResourceProvider
+import pl.aifer.youtube_sandbox_m6_l3.utils.PlaylistsModelComparator
 
-internal class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding, PlaylistsViewModel>(),
-    ResourceProvider {
+internal class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding, PlaylistsViewModel>() {
 
     override val viewModel: PlaylistsViewModel by viewModel()
 
     private val adapter = PlaylistsAdapter(
-        onClickItem = this::onClickItem,
-        resourceProvider = this
+        diffUtilCallback = PlaylistsModelComparator,
+        onClickItem = this::onClickItem
     )
-
-    private fun initRecyclerView(items: List<PlaylistsModel.Item>) {
-        adapter.updateData(items)
-        binding.recyclerView.adapter = adapter
-    }
-
-    private fun onClickItem(playlistItem: PlaylistsModel.Item) {
-        setFragmentResult(
-            Constants.REQUEST_KEY, bundleOf(Constants.RESULT_KEY to playlistItem)
-        )
-        findNavController().navigate(R.id.playlistItemsFragment)
-    }
 
     override fun inflaterViewBinding(
         inflater: LayoutInflater,
@@ -45,11 +36,21 @@ internal class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding, Playli
 
     override fun initView() {
         super.initView()
+        viewModel.getPagingPlaylists().observe(viewLifecycleOwner) {
+            viewModel.viewModelScope.launch(Dispatchers.IO) {
 
-        viewModel.getPlaylists()
+                binding.recyclerView.adapter = adapter.withLoadStateHeaderAndFooter(
+                    header = PlaylistsLoadStateAdapter(),
+                    footer = PlaylistsLoadStateAdapter()
+                )
 
-        viewModel.playlists.observe(viewLifecycleOwner) { list ->
-            initRecyclerView(list.items)
+                adapter.submitData(
+                    lifecycle = lifecycle,
+                    pagingData = it
+                )
+                adapter.retry()
+                adapter.refresh()
+            }
         }
 
         viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
@@ -76,7 +77,7 @@ internal class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding, Playli
                 } else {
                     Toast.makeText(
                         requireContext(),
-                        "You don't have Internet connection, try again",
+                        getString(R.string.you_don_t_have_internet_connection_try_again),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -84,7 +85,10 @@ internal class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding, Playli
         }
     }
 
-    override fun getStringWithKey(resId: Int, keyResId: String): String {
-        return resources.getString(resId, keyResId)
+    private fun onClickItem(playlistItem: PlaylistsModel.Item) {
+        setFragmentResult(
+            Constants.REQUEST_KEY, bundleOf(Constants.RESULT_KEY to playlistItem)
+        )
+        findNavController().navigate(R.id.playlistItemsFragment)
     }
 }

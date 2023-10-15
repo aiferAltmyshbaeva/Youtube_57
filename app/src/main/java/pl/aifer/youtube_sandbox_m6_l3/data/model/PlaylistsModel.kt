@@ -19,7 +19,7 @@ internal data class PlaylistsModel(
         internal data class ContentDetails(
             val videoId: String,
             val itemCount: Int
-        )
+        ) :Serializable
 
         internal data class Snippet(
             val channelId: String,
